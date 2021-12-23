@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTracker.Areas.Identity.Data
+
+@inject SignInManager<BugTrackerUser> SignInManager
+@inject UserManager<BugTrackerUser> UserManager
+
+@{
+    Layout = "_Layout";
+}
+
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row min-vh-100 flex-column flex-md-row flex-nowrap">
+            <aside class="col-12 col-md-3 col-xl-2 p-0 bg-dark">
+                <nav class="navbar navbar-expand-md navbar-dark bd-dark flex-md-column flex-row align-items-center py-2 text-center sticky-top" id="sidebar">
+                    <div class="text-left p-3 mx-0 font-weight-bold">
+                        <div class="text-md-center text-white">
+                            <h2>Eric's Bug Tracker</h2>
+                            <div class="d-md-none">Welcome @UserManager.GetUserName(User)</div>
+                            <div class="d-none d-md-block">
+                                <div>Welcome</div>
+                                <div class="text-break">@UserManager.GetUserName(User)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="navbar-toggler border-0 order-1"
+                            data-toggle="collapse" data-target="#nav" aria-controls="nav"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse order-last" id="nav">
+                        <ul class="navbar-nav flex-column w-100 justify-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Projects" asp-action="Index">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Projects" asp-action="MyTickets">My Tickets</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Projects" asp-action="ListProjects">Projects</a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-area="" asp-controller="Adminstration" asp-action="ListUsers">Users</a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Settings" asp-action="Index">Settings</a>
+                            </li>
+                            <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <li class="nav-item">
+                                <button id="logout" type="submit" class="btn text-danger">Logout</button>
+                            </li>
+                            </form>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+            <div class="flex-fill">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>

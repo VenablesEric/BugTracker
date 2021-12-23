@@ -1,0 +1,71 @@
+﻿@model DashModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Navigation";
+}
+
+<div class="container-fluid">
+    <div class="m-3">
+
+        <div class="card p-3 mb-2">
+            <h1>Dashboard</h1>
+        </div>
+        @if (Model.count > 0)
+        {
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card p-3 mb-2 text-center mx-auto" style="width: 32rem;">
+                        <h3>Priority</h3>
+                        <canvas id="priority"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-sm">
+                    <div class="card p-3 mb-2 text-center mx-auto" style="width: 32rem;">
+                        <h3>Status</h3>
+                        <canvas id="status"></canvas>
+                    </div>
+                </div>
+
+                <div class="col-sm">
+                    <div class="card p-3 mb-2 text-center mx-auto" style="width: 32rem;">
+                        <h3>Type</h3>
+                        <canvas id="type"></canvas>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h4>You have no tickets</h4>
+        }
+    </div>
+</div>
+
+@section Scripts{
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script type="text/javascript">
+
+    $(function() {
+
+        var priorityCXT = document.getElementById("priority").getContext('2d');
+        var priorityPieChart = new Chart(priorityCXT, {
+            type: 'pie',
+            data: @Html.Raw(Json.Serialize(@Model.priority)),
+        });
+
+        var statusCTX = document.getElementById("status").getContext('2d');
+        var statusPieChart = new Chart(statusCTX, {
+            type: 'pie',
+            data: @Html.Raw(Json.Serialize(@Model.status)),
+        });
+
+        var typeCTX = document.getElementById("type").getContext('2d');
+        var typePieChart = new Chart(typeCTX, {
+            type: 'pie',
+            data: @Html.Raw(Json.Serialize(@Model.type)),
+        });
+    });
+</script>
+}

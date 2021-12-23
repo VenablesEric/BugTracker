@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "My Tickets";
+    Layout = "_Navigation";
+}
+
+@model List<Ticket>
+
+<div class="container-fluid">
+    <div class="m-3">
+        <div class="card p-3 mb-2">
+            <h1>My Tickets</h1>
+        </div>
+        @if (Model.Any())
+        {
+            <div class="card p-3 mb-2">
+                <table class="table mt-1">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">TITLE</th>
+                            <th scope="col">DESCRIPTION</th>
+                            <th scope="col">PROJECT</th>
+                            <th scope="col">STATUS</th>
+                            <th scope="col">PRIORITY</th>
+                            <th scope="col">TYPE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model)
+                        {
+                            <tr>
+                                <td>@Html.ActionLink(ticket.Title,"Ticket","Projects", new {id = ticket.Id})</td>
+                                <td>@ticket.Description</td>
+                                <td>@ticket.Project.Name</td>
+                                <td>@ticket.Status</td>
+                                <td>@ticket.Priority</td>
+                                <td>@ticket.Type</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="card p-3 mb-2">
+                <div>No Tickets</div>
+            </div>
+        }
+    </div>
+</div>

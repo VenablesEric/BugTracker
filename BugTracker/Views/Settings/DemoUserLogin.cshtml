@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Login Demo User";
+}
+<body class="text-center vh-100 d-flex" style="background-color:#808080; align-items: center;">
+
+    <div class="text-center rounded-5 shadow bg-light p-3 w-100" style="max-width:420px; margin: 0 auto;">
+
+        <form method="post" asp-route-loginAsDemoUser="true">
+            <h1 class="h3 mb-3 fw-normal">Bug Tracker</h1>
+            <h1 class="h3 mb-3 fw-normal">Demo User Login</h1>
+            <h5>Demo user allows you to view the application without logging in. A demo user will allow you to view the application as if your permissions are set to manager. You will not be able to submit or create any data as a demo user.</h5>
+            <div class="form-group">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Login</button>
+            </div>
+        </form>
+        <hr class="my-4">
+        <small class="text-muted">
+            <p>Back to <a asp-area="Identity" asp-page="/Account/Login">Sign In</a></p>
+        </small>
+    </div>
+</body>

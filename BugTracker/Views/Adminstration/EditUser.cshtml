@@ -1,0 +1,69 @@
+﻿@using BugTracker.Models.Enums
+
+@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "_Navigation";
+}
+<div class="container-fluid">
+    <div class="m-3">
+        <div class="card p-3 mb-2">
+            <h1>Edit User</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card p-3 mb-2">
+                    <form method="post">
+                        <div class="form-group row">
+                            <input asp-for="UserName" hidden class="form-control" />
+
+                            <label asp-for="Id" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="Id" disabled class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="UserName" disabled class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Email" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-10">
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Role</label>
+                            <div class="col-sm-10">
+                                @if (Model.Role.ToString() != ROLE.Admin.ToString())
+                                {
+                                    @ROLE.Admin.ToString()
+                                    <select asp-for="@Model.Role" class="form-control" asp-items="Html.GetEnumSelectList<ROLE_LIMITED>()"></select>
+                                }
+                                else
+                                {
+                                    <div>Admin</div>
+                                }
+                            </div>
+                        </div>
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <div class="btn-group row mt-3 ml-2">
+                            <div class="col-sm=10">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <a asp-action="ListUsers" class="btn btn-primary ml-3">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿@using BugTracker.Areas.Identity.Data
+@using BugTracker.Models.Database
+
+@model ProjectsModel
+
+
+@{
+    ViewData["Title"] = "Projects";
+    Layout = "_Navigation";
+}
+<div class="container-fluid">
+    <div class="m-3">
+        <div class="card p-3 mb-2">
+            <h1>Projects</h1>
+        </div>
+
+        <button class="btn btn-primary btn-sm" data-target="#createProject" data-toggle="modal">Add New Project</button>
+
+        @if (Model.Projects.Any())
+        {
+            <div class="card p-3 mb-2">
+                <table class="table mt-1">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">PROJECTS</th>
+                            <th scope="col">DESCRIPTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var project in Model.Projects)
+                        {
+                            <tr>
+                                <td>@Html.ActionLink(project.Name,"Project","Projects", new {id = project.Id})</td>
+                                <td>@project.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="card p-3 mb-2">
+                <div>No Projects</div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal" id="createProject" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Project</h4>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form asp-action="CreateProject" method="post" autocomplete="off" class="mt-3">
+                <div class="modal-body">
+                    @*-- Project Name --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewProject.Name" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.NewProject.Name" class="form-control" />
+                            <span asp-validation-for="@Model.NewProject.Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @*-- Project Description --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewProject.Description" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.NewProject.Description" class="form-control" />
+                            <span asp-validation-for="@Model.NewProject.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

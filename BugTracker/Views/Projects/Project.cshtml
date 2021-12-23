@@ -1,0 +1,255 @@
+﻿@using BugTracker.Models.Database
+@using BugTracker.Models.Enums
+@using Microsoft.AspNetCore.Identity
+@using BugTracker.Areas.Identity.Data
+
+@inject UserManager<BugTrackerUser> UserManager
+
+@model ProjectDataModel
+
+@{
+    ViewData["Title"] = "Project";
+    Layout = "_Navigation";
+}
+<div class="container-fluid">
+    <div class="m-3">
+        <div class="card p-3 mb-2">
+            <div class="row">
+                <div class="d-inline-flex">
+                    <h1 class="ml-3">Project: @Model.Infomation.Name</h1>
+                </div>
+                <div class="col">
+                    <div class="btn-group dropleft">
+                        <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            ...
+                        </button>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item" data-target="#editProject" data-toggle="modal">Edit Project</button>
+                            <form asp-action="DeleteProject" asp-route-id="@Model.Infomation.Id" method="post">
+                                <button type="submit" class="dropdown-item"
+                                        onclick="return confirm('Delete user : @Model.Infomation.Name')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card p-3 mb-2">
+            <h4>Description: @Model.Infomation.Description</h4>
+        </div>
+
+        <div class="row  mb-2">
+            <div class="col-md-6">
+
+                <h2>Members</h2>
+
+                <button class="btn btn-primary btn-sm" data-target="#addMember" data-toggle="modal">Add Member</button>
+                @if (Model.Members.Any())
+                {
+                    <div class="card p-3 mb-2">
+                        <table class="table mt-2">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">User Name</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var member in Model.Members)
+                                {
+                                    <tr>
+                                        <td>@member.UserName</td>
+                                        <td>
+                                            <div class="btn-group dropleft">
+                                                <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    ...
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <form asp-action="RemoveMember" asp-route-userId="@member.Id" asp-route-projectId="@Model.Infomation.Id" method="post">
+                                                        <button type="submit" class="dropdown-item"
+                                                        onclick="return confirm('Remove user : @member.UserName')">
+                                                            Remove
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="card p-3 mb-2">
+                        <div>No Members</div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6">
+                <h2>Tickets</h2>
+                <button class="btn btn-primary btn-sm" data-target="#addTicket" data-toggle="modal">Add Ticket</button>
+                @if (Model.Tickets.Any())
+                {
+                    <div class="card p-3 mb-2">
+                        <table class="table mt-2">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ticket in Model.Tickets)
+                                {
+                                    <tr>
+                                        <td>@Html.ActionLink(ticket.Title,"Ticket","Projects", new {id = ticket.Id})</td>
+                                        <td>@ticket.Description</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="card p-3 mb-2">
+                        <div>No Tickets</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addMember" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Members</h4>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            @using (Html.BeginForm("AddUserToProject", "Projects", FormMethod.Post))
+            {
+                <div class="modal-body">
+
+                    <input asp-for="@Model.Infomation.Id" type="hidden" />
+                    <b>Select users: </b>
+
+                    <br />
+                    @Html.ListBoxFor(x => x.SelectedNonMembers, Model.NonMembers, new { style= "width: 100%"})
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="editProject" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Project: @Model.Infomation.Name</h4>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form asp-action="EditProject" method="post" autocomplete="off" class="mt-3">
+                <div class="modal-body">
+                    <input asp-for="@Model.Infomation.Id" type="hidden" />
+                    <div class="form-group row">
+                        <label asp-for="@Model.Infomation.Name" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.Infomation.Name" class="form-control" />
+                            <span asp-validation-for="@Model.Infomation.Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="@Model.Infomation.Description" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.Infomation.Description" class="form-control" />
+                            <span asp-validation-for="@Model.Infomation.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="addTicket" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Ticket</h4>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form asp-action="CreateTicket" method="post" class="mt-3">
+                <div class="modal-body">
+                    <input asp-for="@Model.NewTick.ProjectId" type="hidden" value="@Model.Infomation.Id" />
+                    <input asp-for="@Model.NewTick.AuthorUserId" type="hidden" value="@UserManager.GetUserId(User)" />
+                    @*-- Ticket Name --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewTick.Title" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.NewTick.Title" class="form-control" />
+                            <span asp-validation-for="@Model.NewTick.Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @*-- Ticket Info --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewTick.Description" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="@Model.NewTick.Description" class="form-control" />
+                            <span asp-validation-for="@Model.NewTick.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @*-- Assign Member --*@
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Assign</label>
+                        <div class="col-sm-10">
+                            <select asp-for="@Model.NewTick.AssignUserId" class="form-control" asp-items="new SelectList(@Model.Members)">
+                                <option selected>NONE</option>
+                            </select>
+                        </div>
+                    </div>
+                    @*-- Ticket Type --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewTick.Type" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="@Model.NewTick.Type" class="form-control" asp-items="Html.GetEnumSelectList<TICKET_TYPE>()"></select>
+                        </div>
+                    </div>
+                    @*-- Ticket Priority --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewTick.Priority" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="@Model.NewTick.Priority" class="form-control" asp-items="Html.GetEnumSelectList<TICKET_PRIORITY>()"></select>
+                        </div>
+                    </div>
+                    @*-- Ticket Status --*@
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewTick.Status" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="@Model.NewTick.Status" class="form-control" asp-items="Html.GetEnumSelectList<TICKET_STATUS>()"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
