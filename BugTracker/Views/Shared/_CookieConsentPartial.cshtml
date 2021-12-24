@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+}
+
+@if (showBanner)
+{
+    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
+        <div class="text-center">
+            <h6>
+                This site is a portfolio project and registrations are disabled. You can use this website as a demo user, and by doing so you agree for this site to use cookies that keeps you logged in as a demo user. The demo user is not able to create or store data while using the application.
+            </h6>
+            <button type="button" class="accept-policy" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString" onClick="window.location.href=window.location.href">
+                <span aria-hidden="true">Accept</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var button = document.querySelector("#cookieConsent button[data-cookie-string]");
+            button.addEventListener("click", function (event) {
+                document.cookie = button.dataset.cookieString;
+                var cookieContainer = document.querySelector("#cookieConsent");
+                cookieContainer.remove();
+            }, false);
+        })();
+    </script>
+}

@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+<body>
+        <div class="position-absolute w-100" style=" z-index: 999;position: absolute">
+        <partial name="_CookieConsentPartial" />
+    </div>
     @RenderBody()
+</body>
+
     @RenderSection("Scripts", required: false)
 </html>

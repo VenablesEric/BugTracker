@@ -1,8 +1,10 @@
 ﻿@page
 @model LoginModel
 
+@using Microsoft.AspNetCore.Http.Features
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<BugTrackerUser> SignInManager
+
 
 @{
     ViewData["Title"] = "Log in";
@@ -13,7 +15,7 @@
     Response.Redirect("/Home");
 }
 
-<body class="text-center vh-100 d-flex" style="background-color:#808080; align-items: center;">
+<div class="text-center vh-100 d-flex" style="background-color:#808080; align-items: center;">
     <div class="text-center rounded-5 shadow bg-light p-3 w-100" style="max-width:420px; margin: 0 auto;">
 
         <form id="account" method="post">
@@ -39,7 +41,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
             </div>
         </form>
         <hr class="my-4">
@@ -53,4 +55,4 @@
     @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     }
-</body>
+</div>
